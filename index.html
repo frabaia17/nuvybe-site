@@ -1,0 +1,138 @@
+<!doctype html>
+<!--
+  Pagina di arrivo dopo il link di conferma email (Supabase → Authentication → URL Configuration → Site URL).
+  Supabase aggiunge in fondo all'indirizzo (dopo #) o la sessione o un errore: qui mostriamo
+  "confermata" oppure "link scaduto", e poi togliamo quei dati dall'indirizzo.
+  Pubblicata con GitHub Pages dal repository pubblico frabaia17/nuvybe-site.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>nuvybe</title>
+    <link rel="icon" href="logo.png" />
+    <style>
+      :root {
+        --brand: #007aff;
+        --bg: #f2f4f8;
+        --card: #ffffff;
+        --text: #111214;
+        --muted: #5f6570;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0e0f11;
+          --card: #1a1c20;
+          --text: #f2f3f5;
+          --muted: #a3a8b0;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 16px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      }
+      .card {
+        width: 100%;
+        max-width: 420px;
+        padding: 40px 28px 32px;
+        border-radius: 28px;
+        background: var(--card);
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      }
+      .logo {
+        width: 80px;
+        height: 80px;
+      }
+      .brand {
+        margin: 10px 0 28px;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: var(--brand);
+      }
+      .check {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 122, 255, 0.12);
+        color: var(--brand);
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .check.error {
+        background: rgba(217, 54, 54, 0.12);
+        color: #d93636;
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 22px;
+      }
+      p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 22px;
+        color: var(--muted);
+      }
+      .button {
+        display: inline-block;
+        margin-top: 28px;
+        padding: 14px 32px;
+        border-radius: 999px;
+        background: var(--brand);
+        color: #fff;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .hint {
+        margin-top: 14px;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <img class="logo" src="logo.png" alt="nuvybe logo" />
+      <div class="brand">nuvybe</div>
+
+      <div id="ok">
+        <div class="check" aria-hidden="true">✓</div>
+        <h1>Email confirmed</h1>
+        <p>Your nuvybe account is ready. Go back to the app and log in with your email or username.</p>
+        <a class="button" href="vybe://">Back to nuvybe</a>
+        <p class="hint">If the button doesn’t open the app, just switch back to it.</p>
+      </div>
+
+      <div id="error" hidden>
+        <div class="check error" aria-hidden="true">!</div>
+        <h1>This link has expired</h1>
+        <p>Confirmation links work only once and for a limited time. Sign up again in the app to get a new email.</p>
+      </div>
+    </main>
+
+    <script>
+      // Supabase mette l'esito dopo "#" (o "?"): error=... se il link non è più valido
+      var params = new URLSearchParams(location.hash.slice(1) + '&' + location.search.slice(1));
+      if (params.get('error') || params.get('error_code')) {
+        document.getElementById('ok').hidden = true;
+        document.getElementById('error').hidden = false;
+      }
+      // la sessione nell'indirizzo non serve a questa pagina: la togliamo
+      if (location.hash || location.search) history.replaceState(null, '', location.pathname);
+    </script>
+  </body>
+</html>
